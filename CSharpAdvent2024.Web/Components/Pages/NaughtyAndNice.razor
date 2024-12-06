@@ -1,0 +1,56 @@
+﻿@page "/naughtyandnice"
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+
+@inject NaughtyNiceApiClient NaughtyNiceApi
+
+<PageTitle>Naughty & Nice Lists</PageTitle>
+
+<h1>Lists</h1>
+
+@if (naughtyList == null || niceList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nice List</th>
+                <th>Naughty List</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <ul>
+                        @foreach (string nice in niceList)
+                        {
+                            <li>@nice</li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        @foreach (string naughty in naughtyList)
+                        {
+                            <li>@naughty</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    private string[]? naughtyList;
+    private string[]? niceList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        naughtyList = await NaughtyNiceApi.GetNaughtyListAsync();
+        niceList = await NaughtyNiceApi.GetNiceListAsync();
+    }
+}
